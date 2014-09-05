@@ -4,8 +4,9 @@ else
  libtoolize -f -c
 fi
 autoheader
-aclocal
 touch NEWS README AUTHORS ChangeLog
 automake --add-missing
 automake
+echo 1
+aclocal -I m4
 autoconf

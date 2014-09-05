@@ -9,12 +9,21 @@
 #include <stdlib.h>
 #include <lauxlib.h>
 #include <lualib.h>
-#include "../libluahc/libluahc.h"
+#include "../libluahc/luahc.h"
 #include "../libluahc/curl_util.h"
 const char* testfunc = "\
 print(add2(1.0,2.0))\
 ";
-
+void test_curl_get_();
+void test_curl_post_();
+void test_lua_t2query();
+void curl_gp();
+void testall() {
+	test_curl_get_();
+	test_curl_post_();
+	test_lua_t2query();
+	curl_gp();
+}
 int main() {
 //	char a[100], b[100];
 //	sscanf("jjjj:sfsdf", "%[^\\:]:%s", a, b);
@@ -29,11 +38,11 @@ int main() {
 //    if (luaL_dostring(L,testfunc))
 //        printf("Failed to invoke.\n");
 //    lua_close(L);
-	puts("abbbbb");
+//	puts("abbbbb");
+//	test_curl_get_();
+//	test_curl_post_();
+//	test_lua_t2query();
 //	char buf[10240];
-	CURLres *res = curl_get("http://www.baidu.com");
-	printf("abc:%s,%d,%d\n", res->rdata, strlen(res->rdata), res->rcode);
-	curl_sres_head(res);
-	curl_free_res(&res);
+	curl_gp();
 	return 0;
 }
