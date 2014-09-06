@@ -4,8 +4,12 @@
  *  Created on: Sep 4, 2014
  *      Author: cny
  */
+#include <lauxlib.h>
+#include <lua.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "luahc.h"
-
 struct curl_slist* lua_to_slist(lua_State* L, int idx) {
 	struct curl_slist *hs = NULL;
 	lua_pushnil(L);
@@ -66,7 +70,7 @@ void lua_res_t_(lua_State* L, int code, const char* msg, CURLres* res) {
 		}
 	}
 }
-int curl_g(lua_State* L) {
+static int curl_g(lua_State* L) {
 	int alen = lua_gettop(L);
 	if (alen < 1) {
 		lua_res_t_(L, 1, "invalid arguments", 0);
@@ -89,7 +93,10 @@ int curl_g(lua_State* L) {
 	curl_free_res(&res);
 	return 1;
 }
-int curl_p(lua_State* L) {
+int curl_g_(lua_State* L) {
+	return curl_g(L);
+}
+static int curl_p(lua_State* L) {
 	int alen = lua_gettop(L);
 	if (alen < 1) {
 		lua_res_t_(L, 1, "invalid arguments", 0);
@@ -119,5 +126,15 @@ int curl_p(lua_State* L) {
 		curl_slist_free_all(hs);
 	}
 	curl_free_res(&res);
+	return 1;
+}
+int curl_p_(lua_State* L) {
+	return curl_p(L);
+}
+static const luaL_reg luahclib[] = { { "get", curl_g }, { "post", curl_p }, {
+NULL, NULL } };
+
+LUAHC_API int luaopen_luahc(lua_State *L) {
+	luaL_openlib(L, LUA_LUAHCNAME, luahclib, 1);
 	return 1;
 }

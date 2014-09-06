@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 const char* ts_01 =
 		"\
 res=curl_g(\"http://192.168.1.1\");\n\
@@ -34,12 +35,14 @@ end\n\
 res=curl_p(\"http://192.168.1.1\",{a=11},{hh=111});\n\
 print(res.msg);\n\
 ";
+extern int curl_p_(lua_State* L);
+extern int curl_g_(lua_State* L);
 void curl_gp() {
 //	printf("0\n");
 	lua_State *L = lua_open();
 	luaL_openlibs(L);
-	lua_register(L, "curl_g", curl_g);
-	lua_register(L, "curl_p", curl_p);
+	lua_register(L, "curl_g", curl_g_);
+	lua_register(L, "curl_p", curl_p_);
 	//
 	luaL_dostring(L, ts_01);
 	printf("err:%s\n", lua_tostring(L, -1));
