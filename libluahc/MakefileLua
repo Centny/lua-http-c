@@ -7,8 +7,9 @@ OBJS= curl_util.o lua_util.o luahc.o
 LIB_OPTION= -shared
 LUA_LIBDIR= /usr/local/lib/lua/5.1
 LIBNAME= $T.so.$V
+CFLAGS=-fPIC
 $(LIBNAME): $(OBJS)
-	$(CC) $(LIB_OPTION) -o $(LIBNAME) $(OBJS) -llua -lcurl
+	$(CC) $(LIB_OPTION) -o $(LIBNAME) $(OBJS) -llua -lcurl -fPIC
 
 install: $(LIBNAME)
 	mkdir -p $(LUA_LIBDIR)
