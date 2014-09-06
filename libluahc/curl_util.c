@@ -8,7 +8,7 @@
 size_t buf_wdata(void *cbuf, size_t size, size_t nmemb, void *udata) {
 	CURLres* res = (CURLres*) udata;
 	if (!res->rdata) {
-		res->rdata = (char*) calloc(MAX_RESPONSE_LEN, sizeof(char));
+		res->rdata = (char*) calloc(MAX_RESPONSE_LEN + 1, sizeof(char));
 	}
 	strcat(res->rdata, cbuf);
 	return size * nmemb;
@@ -28,9 +28,10 @@ size_t buf_whead(void *cbuf, size_t size, size_t nmemb, void *udata) {
 			} else if (strcmp("Content-Length", resh->key) == 0) {
 				res->clen = atoi(resh->val);
 				if (res->clen) {
-					res->rdata = (char*) calloc(res->clen, sizeof(char));
+					res->rdata = (char*) calloc(res->clen + 1, sizeof(char));
 				} else {
-					res->rdata = (char*) calloc(MAX_RESPONSE_LEN, sizeof(char));
+					res->rdata = (char*) calloc(MAX_RESPONSE_LEN + 1,
+							sizeof(char));
 				}
 			}
 		} else {
