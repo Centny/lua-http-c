@@ -90,7 +90,8 @@ CURLresh* curl_sres_head(CURLres* res) {
 }
 struct curl_slist* curl_to_slist(char** header, int hlen) {
 	struct curl_slist *hs = NULL;
-	for (int i = 0; i < hlen; i++) {
+	int i = 0;
+	for (i = 0; i < hlen; i++) {
 		curl_slist_append(hs, header[i]);
 	}
 	return hs;
