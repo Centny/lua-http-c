@@ -16,7 +16,7 @@ compile
 install-sh
 
 missing
-/Debug/
+/Debug
 
 config.h
 
@@ -33,11 +33,7 @@ libluahc/.deps
 
 *.o
 
-libluahc/Makefile
-
 *.in
-
-Makefile
 
 stamp-h1
 
@@ -72,3 +68,6 @@ bin
 include
 
 lib
+libluahc/luahc.so*
+
+Makefile
