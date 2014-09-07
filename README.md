@@ -1,9 +1,9 @@
 lua-http-c
-===
 
-the lua module for http get/post(by libcurl).
+>the lua module for http get/post(by libcurl).
+
 ## Pre Requirement
-* libcurl
+* libcurl>7.0
 * lua>=5.1
 
 ## Getting Started
