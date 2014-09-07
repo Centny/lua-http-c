@@ -1,11 +1,9 @@
-# $Id: Makefile,v 1.10 2006/07/24 01:24:36 tomas Exp $
-
 T= luahc
 V= 0.1.0
 SRCS= curl_util.c lua_util.c luahc.c
 OBJS= curl_util.o lua_util.o luahc.o
 LIB_OPTION= -shared
-LUA_LIBDIR= /usr/local/lib/lua/5.1
+#LUA_LIBDIR= /usr/local/lib/lua/5.1
 LIBNAME= $T.so.$V
 CFLAGS=-fPIC
 $(LIBNAME): $(OBJS)
