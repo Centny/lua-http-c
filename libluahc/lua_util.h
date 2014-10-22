@@ -8,7 +8,8 @@
 #ifndef LUAUTIL_H_
 #define LUAUTIL_H_
 #include <lua.h>
+#include "curl_util.h"
 
-int lua_t2query(lua_State* L, char* buf, int idx);
+CURL_UTIL_EXP int lua_t2query(lua_State* L, char* buf, int idx);
 
 #endif /* LUAUTIL_H_ */

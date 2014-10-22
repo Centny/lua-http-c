@@ -10,38 +10,44 @@
 #include <curl/curl.h>
 #include <string.h>
 #include <stdlib.h>
+#if WIN32 
+#define CURL_UTIL_EXP __declspec(dllexport)
+#else
+#define CURL_UTIL_EXP
+#endif
 /* using default max response data length, when Content-Length not found */
 #define MAX_RESPONSE_LEN 102400
 #define MAX_HEAD_LEN 100
 /* the CURL response head */
-typedef struct CURLresh {
+typedef struct CURLresh_ CURLresh;
+struct CURLresh_{
 	char key[MAX_HEAD_LEN], val[MAX_HEAD_LEN];
-	struct CURLresh *pre, *next;
-} CURLresh;
+	CURLresh *pre, *next;
+};
 /* the CURL HTTP result */
-typedef struct CURLres {
+typedef struct CURLres_ CURLres;
+struct CURLres_ {
 	CURLcode ccode; 	//curl code
 	int rcode; 			//HTTP response code.
 	char ctype[MAX_HEAD_LEN]; 		//content type.
 	int clen; 			//content length.
 	char* rdata; 		//response data.
-	struct CURLresh *h_start;	//the response header link table start node.
-	struct CURLresh *h_end;	//the response header link table end node.
-} CURLres;
+	CURLresh *h_start;	//the response header link table start node.
+	CURLresh *h_end;	//the response header link table end node.
+};
 /* free the response CURLres */
-void curl_free_res(CURLres** res);
+CURL_UTIL_EXP void curl_free_res(CURLres** res);
 /* get the head value by name */
-CURLresh* curl_res_head(CURLres* res, const char* key);
+CURL_UTIL_EXP CURLresh* curl_res_head(CURLres* res, const char* key);
 /* print all head */
-CURLresh* curl_sres_head(CURLres* res);
+CURL_UTIL_EXP CURLresh* curl_sres_head(CURLres* res);
 /* send GET HTTP request */
-CURLres* curl_get(const char* url, char** header, int hlen);
-CURLres* curl_get_h(const char* url, struct curl_slist *header);
+CURL_UTIL_EXP CURLres* curl_get(const char* url, char** header, int hlen);
+CURL_UTIL_EXP CURLres* curl_get_h(const char* url, struct curl_slist *header);
 /* send POST HTTP request */
 //CURLres* curl_post(const char* url);
 //CURLres* curl_post(const char* url, const char* args);
-CURLres* curl_post(const char* url, const char* args, char** header, int hlen);
-CURLres* curl_post_h(const char* url, const char* args,
+CURL_UTIL_EXP CURLres* curl_post(const char* url, const char* args, char** header, int hlen);
+CURL_UTIL_EXP CURLres* curl_post_h(const char* url, const char* args,
 		struct curl_slist *header);
-
 #endif /* CURL_UTIL_H_ */

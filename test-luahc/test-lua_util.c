@@ -13,14 +13,15 @@
 #include <string.h>
 #include <stdlib.h>
 void test_lua_t2query() {
+	lua_State *L;
+	char buf[102400] = { 0 };
 	printf("0\n");
-	lua_State *L = lua_open();
+	L = luaL_newstate();
 	printf("0-1,%p,\n", L);
 //	luaopen_base(L);
 	printf("1\n");
 	luaL_dostring(L, "abcz={a=11111,b=2,c=\"sfsd\"};\n abcz2={};");
 	printf("2\n");
-	char buf[102400] = { 0 };
 	//
 	lua_getglobal(L, "abcz");
 	printf("obj:%d\n", lua_istable(L, -1));

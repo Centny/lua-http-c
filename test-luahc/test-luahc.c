@@ -39,7 +39,7 @@ extern int curl_p_(lua_State* L);
 extern int curl_g_(lua_State* L);
 void curl_gp() {
 //	printf("0\n");
-	lua_State *L = lua_open();
+	lua_State *L = luaL_newstate();
 	luaL_openlibs(L);
 	lua_register(L, "curl_g", curl_g_);
 	lua_register(L, "curl_p", curl_p_);

@@ -12,8 +12,8 @@
 #include "luahc.h"
 struct curl_slist* lua_to_slist(lua_State* L, int idx) {
 	struct curl_slist *hs = NULL;
-	lua_pushnil(L);
 	char buf[MAX_ARG_LEN] = { 0 };
+	lua_pushnil(L);
 	while (lua_next(L, idx)) {
 		memset(buf, 0, MAX_ARG_LEN);
 		sprintf(buf, "%s:%s", lua_tostring(L, -2), lua_tostring(L, -1));
@@ -23,6 +23,8 @@ struct curl_slist* lua_to_slist(lua_State* L, int idx) {
 	return hs;
 }
 void lua_res_t_(lua_State* L, int code, const char* msg, CURLres* res) {
+	CURLresh* resh;
+	//
 	lua_newtable(L);
 	//
 	lua_pushstring(L, "lcode");
@@ -59,7 +61,7 @@ void lua_res_t_(lua_State* L, int code, const char* msg, CURLres* res) {
 		if (res->h_start) {
 			lua_pushstring(L, "header");
 			lua_newtable(L);
-			CURLresh* resh = res->h_start;
+			resh = res->h_start;
 			while (resh) {
 				lua_pushstring(L, resh->key);
 				lua_pushstring(L, resh->val);
@@ -71,12 +73,13 @@ void lua_res_t_(lua_State* L, int code, const char* msg, CURLres* res) {
 	}
 }
 static int curl_g(lua_State* L) {
+	CURLres* res;
+	struct curl_slist* hs = 0;
 	int alen = lua_gettop(L);
 	if (alen < 1) {
 		lua_res_t_(L, 1, "invalid arguments", 0);
 		return 1;
 	}
-	struct curl_slist* hs = 0;
 	if (alen > 1) {
 		if (lua_istable(L, 2)) {
 			hs = lua_to_slist(L, 2);
@@ -85,7 +88,7 @@ static int curl_g(lua_State* L) {
 			return 1;
 		}
 	}
-	CURLres* res = curl_get_h(lua_tostring(L, 1), hs);
+	res = curl_get_h(lua_tostring(L, 1), hs);
 	lua_res_t_(L, 0, 0, res);
 	if (hs) {
 		curl_slist_free_all(hs);
@@ -97,12 +100,15 @@ int curl_g_(lua_State* L) {
 	return curl_g(L);
 }
 static int curl_p(lua_State* L) {
+	CURLres* res;
+	char args[MAX_ARG_LEN] = { 0 };
+	struct curl_slist* hs = 0;
 	int alen = lua_gettop(L);
+	//
 	if (alen < 1) {
 		lua_res_t_(L, 1, "invalid arguments", 0);
 		return 1;
 	}
-	char args[MAX_ARG_LEN] = { 0 };
 	if (alen > 1) {
 		if (lua_istable(L, 2)) {
 			lua_t2query(L, args, 2);
@@ -111,7 +117,6 @@ static int curl_p(lua_State* L) {
 			return 1;
 		}
 	}
-	struct curl_slist* hs = 0;
 	if (alen > 2) {
 		if (lua_istable(L, 3)) {
 			hs = lua_to_slist(L, 3);
@@ -120,7 +125,7 @@ static int curl_p(lua_State* L) {
 			return 1;
 		}
 	}
-	CURLres* res = curl_post_h(lua_tostring(L, 1), args, hs);
+	res = curl_post_h(lua_tostring(L, 1), args, hs);
 	lua_res_t_(L, 0, 0, res);
 	if (hs) {
 		curl_slist_free_all(hs);
@@ -131,7 +136,7 @@ static int curl_p(lua_State* L) {
 int curl_p_(lua_State* L) {
 	return curl_p(L);
 }
-static const luaL_reg luahclib[] = { { "get", curl_g }, { "post", curl_p }, {
+luaL_Reg luahclib[] = { { "get", curl_g }, { "post", curl_p }, {
 NULL, NULL } };
 
 LUAHC_API int luaopen_luahc(lua_State *L) {

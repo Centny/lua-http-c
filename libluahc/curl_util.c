@@ -6,7 +6,9 @@
  */
 #include "curl_util.h"
 size_t buf_wdata(void *cbuf, size_t size, size_t nmemb, void *udata) {
-	CURLres* res = (CURLres*) udata;
+	CURLres* res;
+	//
+	res = (CURLres*) udata;
 	if (!res->rdata) {
 		res->rdata = (char*) calloc(MAX_RESPONSE_LEN + 1, sizeof(char));
 	}
@@ -14,8 +16,10 @@ size_t buf_wdata(void *cbuf, size_t size, size_t nmemb, void *udata) {
 	return size * nmemb;
 }
 size_t buf_whead(void *cbuf, size_t size, size_t nmemb, void *udata) {
-	CURLres* res = (CURLres*) udata;
-	CURLresh* resh = (CURLresh*) calloc(1, sizeof(struct CURLresh));
+	CURLres* res;
+	CURLresh* resh;
+	res = (CURLres*) udata;
+	resh = (CURLresh*) calloc(1, sizeof(CURLresh));
 //	puts(cbuf);
 	if (res->rcode) {
 		sscanf(cbuf, "%[^: \r\n]:%[^:\r\n]", resh->key, resh->val);
@@ -53,6 +57,8 @@ size_t buf_whead(void *cbuf, size_t size, size_t nmemb, void *udata) {
 }
 
 void curl_free_res(CURLres** res) {
+	CURLresh *h, *t;
+	//
 	if (!res || !*res) {
 		return;
 	}
@@ -60,7 +66,7 @@ void curl_free_res(CURLres** res) {
 		free((*res)->rdata);
 	}
 	if ((*res)->h_start) {
-		CURLresh *h = (*res)->h_start, *t = NULL;
+		h = (*res)->h_start, t = NULL;
 		do {
 			t = h->next;
 			free(h);
@@ -72,7 +78,9 @@ void curl_free_res(CURLres** res) {
 	*res = NULL;
 }
 CURLresh* curl_res_head(CURLres* res, const char* key) {
-	CURLresh *h = res->h_start;
+	CURLresh *h;
+	//
+	h = res->h_start;
 	while (h) {
 		if (strcmp(key, h->key) == 0) {
 			return h;
@@ -82,7 +90,9 @@ CURLresh* curl_res_head(CURLres* res, const char* key) {
 	return NULL;
 }
 CURLresh* curl_sres_head(CURLres* res) {
-	CURLresh *h = res->h_start;
+	CURLresh *h;
+	//
+	h = res->h_start;
 	while (h) {
 		printf("H-->%s:%s\n", h->key, h->val);
 		h = h->next;
@@ -98,16 +108,22 @@ struct curl_slist* curl_to_slist(char** header, int hlen) {
 	return hs;
 }
 CURLres* curl_get(const char* url, char** header, int hlen) {
-	struct curl_slist *hs = curl_to_slist(header, hlen);
-	CURLres* res = curl_get_h(url, hs);
+	struct curl_slist *hs;
+	CURLres* res;
+	//
+	hs = curl_to_slist(header, hlen);
+	res = curl_get_h(url, hs);
 	if (hs) {
 		curl_slist_free_all(hs);
 	}
 	return res;
 }
 CURLres* curl_get_h(const char* url, struct curl_slist *header) {
-	CURLres *res = (CURLres*) calloc(1, sizeof(struct CURLres));
-	CURL *curl = curl_easy_init();
+	CURLres *res;
+	CURL *curl;
+	//CURL *curl;
+	res = (CURLres*) calloc(1, sizeof(CURLres));
+	curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, url);
 	if (header) {
 		curl_easy_setopt(curl, CURLOPT_PREQUOTE, header);
@@ -124,8 +140,11 @@ CURLres* curl_get_h(const char* url, struct curl_slist *header) {
 	return res;
 }
 CURLres* curl_post(const char* url, const char* args, char** header, int hlen) {
-	struct curl_slist *hs = curl_to_slist(header, hlen);
-	CURLres* res = curl_post_h(url, args, hs);
+	struct curl_slist *hs;
+	CURLres* res;
+	//
+	hs = curl_to_slist(header, hlen);
+	res = curl_post_h(url, args, hs);
 	if (hs) {
 		curl_slist_free_all(hs);
 	}
@@ -133,8 +152,10 @@ CURLres* curl_post(const char* url, const char* args, char** header, int hlen) {
 }
 CURLres* curl_post_h(const char* url, const char* args,
 		struct curl_slist *header) {
-	CURLres *res = (CURLres*) calloc(1, sizeof(struct CURLres));
-	CURL *curl = curl_easy_init();
+	CURLres *res;
+	CURL *curl;
+	res = (CURLres*) calloc(1, sizeof(CURLres));
+	curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, url);
 	if (args && strlen(args)) {
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, args);

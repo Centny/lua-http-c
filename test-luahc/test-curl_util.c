@@ -9,8 +9,9 @@
 #include <string.h>
 #include <stdlib.h>
 void test_curl_get_() {
-	printf("<--------------test_curl_get_---------------->\n");
 	CURLres *res;
+	char* hs[] = { "abc:jjj", "jfdd:ss" };
+	printf("<--------------test_curl_get_---------------->\n");
 	res = curl_get("http://www.baidu.com", 0, 0);
 	if (res->ccode) {
 		printf("ccode:%d\n", res->ccode);
@@ -21,7 +22,6 @@ void test_curl_get_() {
 	}
 	curl_free_res(&res);
 	//
-	char* hs[] = { "abc:jjj", "jfdd:ss" };
 	res = curl_get("http://www.baidu.com", hs, 2);
 	if (res->ccode) {
 		printf("ccode:%d\n", res->ccode);
@@ -38,9 +38,11 @@ void test_curl_get_() {
 }
 
 void test_curl_post_() {
-	printf("<--------------test_curl_post_---------------->\n");
 	CURLres *res;
 	unsigned int len;
+	char* hs[] = { "abc:jjj", "jfdd:ss" };
+	//
+	printf("<--------------test_curl_post_---------------->\n");
 	//
 	printf("test_curl_post_\n");
 	res = curl_post("http://www.baidu.com", 0, 0, 0);
@@ -66,7 +68,6 @@ void test_curl_post_() {
 	curl_free_res(&res);
 	//
 	printf("test_curl_post_3\n");
-	char* hs[] = { "abc:jjj", "jfdd:ss" };
 	res = curl_post("http://www.baidu.com", "abc=1&jkk=2", hs, 2);
 	printf("test_curl_post_3-1\n");
 	if (res->ccode) {

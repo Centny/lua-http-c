@@ -14,4 +14,6 @@
 #define LUA_LUAHCNAME	"luahc"
 #define LUAHC_API LUA_API
 LUAHC_API int luaopen_luahc (lua_State *L);
+LUAHC_API int curl_g_(lua_State* L);
+LUAHC_API int curl_p_(lua_State* L);
 #endif /* LIBLUAHC_H_ */
