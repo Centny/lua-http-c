@@ -71,3 +71,9 @@ lib
 libluahc/luahc.so*
 
 Makefile
+
+Release
+Debug
+*.suo
+*.sdf
+*.bak
